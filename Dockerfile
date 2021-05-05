@@ -3,24 +3,27 @@ FROM registry.jetbrains.team/p/prj/containers/projector-webstorm
 USER root
 
 RUN apt-get update && \
-    apt-get -y install vim zsh wget curl git tree rsync openssh-client zip default-mysql-client dnsutils \
+    apt-get -y install vim zsh wget curl git tree rsync openssh-client zip default-mysql-client dnsutils \ # shyd/zsh like packages
         nodejs npm yarn \
         imagemagick graphicsmagick \
-        libssl-dev libreadline-dev zlib1g-dev \
-        autoconf bison build-essential libyaml-dev \
-        libreadline-dev libncurses5-dev libffi-dev libgdbm-dev \
+        libssl-dev libreadline-dev zlib1g-dev \ # for ruby
+        autoconf bison build-essential libyaml-dev \ # for ruby
+        libreadline-dev libncurses5-dev libffi-dev libgdbm-dev \ # for ruby
         sudo
 
 RUN rm -rf /var/lib/apt/lists/*
 
+# add user to sudoers
 RUN usermod -aG sudo $PROJECTOR_USER_NAME
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 RUN wget -qO /root/.zshrc https://git.grml.org/f/grml-etc-core/etc/zsh/zshrc
+RUN wget -qO /root/.zshrc.local https://raw.githubusercontent.com/shyd/docker-zsh/master/zshrc.local
+RUN chsh -s $(which zsh)
 RUN chsh -s $(which zsh) $PROJECTOR_USER_NAME
 
 RUN npm install -g gulp-cli bower gh-pages
-# remove orphants
+# remove orphans
 RUN rm -rf $HOME/.npm
 RUN rm $HOME/.wget-hsts
 
@@ -29,6 +32,7 @@ USER $PROJECTOR_USER_NAME
 RUN wget -qO ~/.zshrc https://git.grml.org/f/grml-etc-core/etc/zsh/zshrc
 RUN wget -qO ~/.zshrc.local https://raw.githubusercontent.com/shyd/docker-zsh/master/zshrc.local
 
+# install ruby in rbenv
 SHELL ["/bin/bash", "-c"]
 RUN curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | bash
 
