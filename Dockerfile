@@ -3,12 +3,12 @@ FROM registry.jetbrains.team/p/prj/containers/projector-webstorm
 USER root
 
 RUN apt-get update && \
-    apt-get -y install vim zsh wget curl git tree rsync openssh-client zip default-mysql-client dnsutils \ # shyd/zsh like packages
+    apt-get -y install vim zsh wget curl git tree rsync openssh-client zip default-mysql-client dnsutils \
         nodejs npm yarn \
         imagemagick graphicsmagick \
-        libssl-dev libreadline-dev zlib1g-dev \ # for ruby
-        autoconf bison build-essential libyaml-dev \ # for ruby
-        libreadline-dev libncurses5-dev libffi-dev libgdbm-dev \ # for ruby
+        libssl-dev libreadline-dev zlib1g-dev \
+        autoconf bison build-essential libyaml-dev \
+        libreadline-dev libncurses5-dev libffi-dev libgdbm-dev \
         sudo
 
 RUN rm -rf /var/lib/apt/lists/*
